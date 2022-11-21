@@ -1,4 +1,6 @@
+import 'package:employee_book/widget/custom_date_picker_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../widget/custom_text_form_field.dart';
 
@@ -15,6 +17,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
+  DateTime? _dateOfBirth; // for selected date as it is
 
 
   @override
@@ -46,8 +49,31 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
             CustomTextFormField(controller: _lastNameController, txtLabel: 'Last Name',),
             const SizedBox(height: 8.0,),
+            
+            CustomDatePickerFromField(controller: _dateOfBirthController, txtLabel: 'Date Of Birth', callback: (){
 
-            CustomTextFormField(controller: _dateOfBirthController, txtLabel: 'Date Of Birth',),
+              pickDateOfBirth(context);
+
+            }),
+
+            // TextFormField(
+            //   controller: _dateOfBirthController ,
+            //   keyboardType: TextInputType.name,
+            //   decoration: const InputDecoration(
+            //   border: OutlineInputBorder(),
+            //   label: Text('Date Of Birth'),
+            // ),
+            // validator: (value)
+            // {
+            // if(value == null || value.isEmpty)
+            // {
+            // return 'Date of birth name cannot be empty';
+            // }
+            // return null;
+            // },
+            //
+            //   onTap: () => pickDateOfBirth(context),
+            // ),
             const SizedBox(height: 8.0,),
             // TextFormField(
             //   controller: _controller ,
@@ -77,7 +103,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     final initialDate = DateTime.now();
     final newDate = await showDatePicker(
         context: context,
-        initialDate: initialDate,
+        initialDate: _dateOfBirth ?? initialDate, // for selected date as it is
         firstDate: DateTime(DateTime.now().year - 100),
         lastDate: DateTime(DateTime.now().year + 1),
 
@@ -100,7 +126,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     }
 
     setState(() {
-      _dateOfBirthController.text = newDate as String;
+
+      _dateOfBirth = newDate; // for selected date as it is
+      String dob = DateFormat('dd/MM/yyyy').format(newDate);
+      //_dateOfBirthController.text = newDate.toIso8601String();
+      _dateOfBirthController.text = dob;
     });
   }
 }
